@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "express backend",
+  "main": "app.ts",
+  "type": "module",
+  "scripts": {
+    "test": "npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a1evtinka2/bookabase.git"
+  },
+  "keywords": [
+    "express"
+  ],
+  "author": "a1evtinka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/a1evtinka2/bookabase/issues"
+  },
+  "homepage": "https://github.com/a1evtinka2/bookabase#readme",
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.3",
+    "typescript": "^7.0.2"
+  }
+}
