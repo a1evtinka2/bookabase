@@ -5,7 +5,9 @@
   "main": "app.ts",
   "type": "module",
   "scripts": {
-    "test": "npm run dev"
+    "test": "npm run test",
+    "start": "node --env-file=.env src/app.ts",
+    "migrate": "node-pg-migrate"
   },
   "repository": {
     "type": "git",
@@ -21,8 +23,11 @@
   },
   "homepage": "https://github.com/a1evtinka2/bookabase#readme",
   "dependencies": {
+    "db-migrate-pg": "^1.5.2",
     "dotenv": "^18.0.4",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "node-pg-migrate": "^9.0.0",
+    "pg": "^8.23.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
