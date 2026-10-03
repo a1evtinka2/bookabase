@@ -1,15 +1,19 @@
-import { Router, type Response, type Request } from 'express';
 import type { UserController } from '../../controllers/users/index.ts';
+import { Router, type Response, type Request, type NextFunction } from 'express';
 
 const createUsersRouter = (controller: UserController) => {
   const router = Router();
 
-  router.get('/', async function(req: Request, res: Response) {
-    await controller.getAllUsers(req, res);
+  router.get('/:id', async function(req: Request, res: Response, next: NextFunction) {
+    await controller.getAllUsers(req, res, next);
   });
   
-  router.get('/list', function(req: Request, res: Response) {
-    res.send('List of APIv1 users.');
+  router.get('/list', async function(req: Request, res: Response, next: NextFunction) {
+    await controller.getAllUsers(req, res, next);
+  });
+
+  router.post('/', async function(req: Request, res: Response, next: NextFunction) {
+    await controller.createUser(req, res, next);
   });
 
   return router;

@@ -1,25 +1,38 @@
-type User = {
-  id: string,
-  nickname: string,
-  dateOfBirth: number,
-}
-
-const mockUsers: User[] = [
-    {  id: '123',
-       nickname: 'nat',
-       dateOfBirth: 4,
-    },
-    {  id: '124',
-       nickname: 'mal',
-       dateOfBirth: 5,
-    }
-]
+import { randomUUID } from "node:crypto";
+import type { User, UserData } from "../models/user.ts";
+import { UserRepository } from "../repositories/userRepository/index.ts";
+import { dateIsFormatted, dateIsNotInFuture } from "../validators/dataValidators.ts";
+import { AppError } from "../models/error.ts";
 
 export class UserService {
   private users: User[] = [];
+  private userRepository: UserRepository;
+
+  constructor(userRepository: UserRepository) {
+    this.userRepository = userRepository;
+  }
 
   fetchUsers = async () => {
-    this.users = mockUsers;
-    return this.users;
+    const allUsers = await this.userRepository.getAllUsers();
+    return allUsers;
+}
+
+  createUser = async (userData: UserData) => {
+    const date = userData.dateOfBirth;
+    
+    const validDate = dateIsFormatted(date) && dateIsNotInFuture(date);
+
+    if (!validDate) {
+      throw new AppError(400, 'invalid date of birth')
+    }
+
+    const id = randomUUID()
+    
+    const userToCreate = {
+      ...userData,
+      id,
+    };
+    const newUser = await this.userRepository.create(userToCreate);
+    return newUser;
 }
 }

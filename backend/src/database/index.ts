@@ -1,22 +1,16 @@
 import { Pool } from 'pg';
 
-const {
-    DB_HOST,
-    DB_USER,
-    DB_DATABASE,
-    DB_PASSWORD,
-    DB_PORT,
-} = process.env;
+const connectionString = process.env.DATABASE_URL;
 
 const pool = new Pool({
-  user: DB_USER,
-  host: DB_HOST,
-  database: DB_DATABASE,
-  password: DB_PASSWORD,
-  port: DB_PORT,
+    connectionString,
 });
 
-console.log(`DB connected on port ${process.env.DB_PORT}`);
+console.log(`DB connected on port 5432`);
+
+export const db = {
+  query: (text: string, params: any) => pool.query(text, params),
+};
 
 
 export default pool;
