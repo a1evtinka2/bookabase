@@ -1,4 +1,4 @@
-import type { UserService } from '../../services/userService.ts';
+import type { UserService } from '../../services/users/userService.ts';
 import { type Response, type Request, type NextFunction } from 'express';
 
 
@@ -9,9 +9,17 @@ export class UserController {
     this.userService = userService;
   }
 
-  public async getAllUsers(req: Request, res: Response, next: NextFunction) {
+  public async getAllUsers(
+    req: Request, 
+    res: Response, 
+    next: NextFunction) {
     try {
+      console.log('Controller: before service');
+      
         const users = await this.userService.fetchUsers();
+        console.log('Controller: before response');
+        
+
         res.status(200).json(users);
     } catch (error) {
         next(error);
@@ -22,6 +30,7 @@ export class UserController {
     try {
         const userData = req.body;
         const newUser = await this.userService.createUser(userData);
+        
         res.status(200).json(newUser);
     } catch (error) {
         next(error);

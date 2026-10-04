@@ -1,11 +1,10 @@
 import { randomUUID } from "node:crypto";
-import type { User, UserData } from "../models/user.ts";
-import { UserRepository } from "../repositories/userRepository/index.ts";
-import { dateIsFormatted, dateIsNotInFuture } from "../validators/dataValidators.ts";
-import { AppError } from "../models/error.ts";
+import type { User, UserData } from "../../models/user.ts";
+import { UserRepository } from "../../repositories/userRepository/index.ts";
+import { dateIsFormatted, dateIsNotInFuture } from "../../validators/dataValidators.ts";
+import { AppError } from "../../models/error.ts";
 
 export class UserService {
-  private users: User[] = [];
   private userRepository: UserRepository;
 
   constructor(userRepository: UserRepository) {
@@ -13,7 +12,11 @@ export class UserService {
   }
 
   fetchUsers = async () => {
+    console.log('Service: before repository');
+    
     const allUsers = await this.userRepository.getAllUsers();
+    console.log('Service: after repository');
+    
     return allUsers;
 }
 

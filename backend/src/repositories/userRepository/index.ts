@@ -6,8 +6,12 @@ export class UserRepository {
 
   async getAllUsers(): Promise<User[]> {
     try {
+      console.log('Repository: before query');
+      
       const result = await db.query(
-        `SELECT * FROM users`, undefined);
+        `SELECT * FROM users`);
+      console.log('Repository: after query');
+
       return result.rows;
     } catch (error: any) {
       throw new Error(`Error fetching user: ${error.message}`);

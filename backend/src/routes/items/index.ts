@@ -1,13 +1,25 @@
-import { Router, type Response, type Request } from 'express';
+import { Router, type Response, type Request, type NextFunction } from 'express';
+import type { ItemsController } from '../../controllers/items/index.ts';
 
-const items = Router();
+const createItemsRouter = (controller: ItemsController) => {
+  const router = Router();
 
-items.get('/', function(req: Request, res: Response) {
-  res.send('Hello from items root route.');
-});
+  router.get('/list', async function(req: Request, res: Response, next: NextFunction) {
+    await controller.getAllItems(req, res, next);
+  });
 
-items.get('/list', function(req: Request, res: Response) {
-  res.send('List of APIv1 items.');
-});
+  router.get('/:id', async function(req: Request<{ id: string }>, res: Response, next: NextFunction) {
+    await controller.getItemById(req, res, next);
+  });
 
-export default items;
+
+  router.post('/', async function(req: Request, res: Response, next: NextFunction) {
+    await controller.createItem(req, res, next);
+  });
+
+  return router;
+} 
+
+
+
+export default createItemsRouter;
