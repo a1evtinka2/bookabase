@@ -19,6 +19,11 @@ export class AuthorsService {
     return author;
   }
 
+  deleteAuthor = async (id: string) => {
+    const deleted = await this.authorsRepository.deleteAuthor(id);
+    return deleted;
+  }
+
   createAuthor = async (authorData: AuthorsData) => {
     const { firstName, surname } = authorData;
     const fullName = surname ? `${firstName} ${surname}` : firstName;

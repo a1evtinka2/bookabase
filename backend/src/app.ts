@@ -34,7 +34,7 @@ const itemsRouter = createItemsRouter(itemsController)
 
 const corsOptions = {
     origin: 'http://localhost:5173',
-    methods: 'GET,POST', 
+    methods: 'GET,POST,GET,DELETE', 
     allowedHeaders: 'Content-Type,Authorization' 
 };
 

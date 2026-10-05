@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { ItemsRepository } from "../../repositories/itemsRepository/index.ts";
-import type { ItemData } from "../../models/items.ts";
+import type { ItemData, ItemType, ItemTypeExt, ItemWithAuthorType } from "../../models/items.ts";
 
 export class ItemsService {
   private itemsRepository: ItemsRepository;
@@ -8,12 +8,26 @@ export class ItemsService {
   constructor(itemsRepository: ItemsRepository) {
     this.itemsRepository = itemsRepository;
   }
+  private formatItems = (items: ItemTypeExt[]): ItemWithAuthorType[] => {
+    const itemsWithAuthor = items.map((i) => {
+      return {
+        ...i,
+        author: {
+          firstName: i.firstName,
+          surname: i.surname,
+        }
+      }
+    })
+      
+    return itemsWithAuthor;
+  }
 
   fetchItems = async () => {
-    const allItems = await this.itemsRepository.getAllItems();
-    console.log(allItems);
+    const rawItems = await this.itemsRepository.getAllItems();
+    const formattedItems = this.formatItems(rawItems);
+    console.log(formattedItems);
     
-    return allItems;
+    return formattedItems;
   }
 
   fetchItem = async (id: string) => {

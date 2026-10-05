@@ -1,9 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Pacifico&display=swap');
 @import 'tailwindcss';
 
-.ticks {
-  width: 500px;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  background-color: antiquewhite;
+@theme {
+  --font-serif: 'Pacifico', cursive;
+  --font-pacifico: 'Pacifico', cursive;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-lobster: 'Lobster', cursive;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  /* Glass shelf additions */
+  --color-glass-1: var(--glass-1);
+  --color-glass-2: var(--glass-2);
+  --color-glass-edge: var(--glass-edge);
+  --color-glass-hairline: var(--glass-hairline);
+  --color-glow-cool: var(--glow-cool);
+  --color-glow-warm: var(--glow-warm);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.957 0.01 293.8);
+  --foreground: oklch(0.211 0.045 307.8);
+  --card: oklch(1 0 0 / 0.42);
+  --card-foreground: oklch(0.211 0.045 307.8);
+  --popover: oklch(0.985 0.005 280);
+  --popover-foreground: oklch(0.211 0.045 307.8);
+  --primary: oklch(0.506 0.066 243.9);
+  --primary-foreground: oklch(0.975 0.004 270);
+  --secondary: oklch(0.92 0.012 290);
+  --secondary-foreground: oklch(0.211 0.045 307.8);
+  --muted: oklch(0.92 0.012 290);
+  --muted-foreground: oklch(0.48 0.03 285);
+  --accent: oklch(0.92 0.012 290);
+  --accent-foreground: oklch(0.211 0.045 307.8);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.211 0.045 307.8 / 0.1);
+  --input: oklch(0.211 0.045 307.8 / 0.12);
+  --ring: oklch(0.506 0.066 243.9);
+  /* Glass surfaces and lights */
+  --glass-1: oklch(1 0 0 / 0.42);
+  --glass-2: oklch(1 0 0 / 0.3);
+  --glass-edge: oklch(1 0 0 / 0.6);
+  --glass-hairline: oklch(0.211 0.045 307.8 / 0.08);
+  --glow-cool: oklch(0.8 0.057 255);
+  --glow-warm: oklch(0.778 0.06 45.4);
+  --shelf-glint: oklch(1 0 0 / 0.85);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+}
+
+/* Shelf and motion vocabulary */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes slidein {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+#root {
+  width: 200%;
 }

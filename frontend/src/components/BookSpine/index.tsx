@@ -1,21 +1,28 @@
+import getRandomColor from '../../utils/getRandomColor';
+
 type BookSpineProps = {
   title: string;
   className?: string;
+  isNew?: boolean;
+  onNewClick?: () => void;
 };
 
-export function BookSpine({ title, className = '' }: BookSpineProps) {
+export function BookSpine({
+  title,
+  className = '',
+  isNew = false,
+  onNewClick,
+}: BookSpineProps) {
+  const color = getRandomColor();
   return (
     <div
       className={`
         group relative
-        h-64 w-12
+        // ${isNew ? 'h-12 w-84' : 'h-64 w-12'}
         overflow-hidden
         rounded-sm
         border border-black/20
         bg-gradient-to-r
-        from-amber-900
-        via-amber-700
-        to-amber-900
         shadow-[3px_4px_8px_rgba(0,0,0,0.25)]
         transition-transform
         duration-200
@@ -23,25 +30,32 @@ export function BookSpine({ title, className = '' }: BookSpineProps) {
         hover:shadow-[5px_7px_12px_rgba(0,0,0,0.3)]
         ${className}
       `}
+      style={{ backgroundColor: color }}
+      onClick={onNewClick}
     >
       {/* Верхний декоративный кант */}
-      <div className="absolute inset-x-0 top-3 h-px bg-amber-200/40" />
+      <div className="absolute inset-x-0 top-3 h-px" />
       <div className="absolute inset-x-0 top-4 h-px bg-black/20" />
 
       {/* Нижний декоративный кант */}
       <div className="absolute inset-x-0 bottom-4 h-px bg-black/20" />
-      <div className="absolute inset-x-0 bottom-3 h-px bg-amber-200/40" />
-
-      {/* Блики на корешке */}
-      <div className="absolute inset-y-0 left-1 w-px bg-white/10" />
-      <div className="absolute inset-y-0 right-1 w-px bg-black/20" />
+      <div className="absolute inset-x-0 bottom-3 h-px" />
 
       {/* Название */}
       <div className="absolute inset-0 flex items-center justify-center">
         <span
-          className="
-            max-w-[14rem]
-            rotate-90
+          className={`
+            inline-flex
+            h-12
+            w-fit
+            items-center
+            justify-center
+            rounded-sm
+            bg-amber-800
+            px-6
+
+            max-w-[24rem]
+            ${!isNew && 'rotate-90'}
             whitespace-nowrap
             px-2
             text-center
@@ -50,8 +64,8 @@ export function BookSpine({ title, className = '' }: BookSpineProps) {
             font-semibold
             tracking-wide
             text-amber-50
-            drop-shadow-[1px_1px_1px_rgba(0,0,0,0.5)]
-          "
+            
+          `}
         >
           {title}
         </span>

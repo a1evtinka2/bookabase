@@ -7,8 +7,12 @@ const createAuthorsRouter = (controller: AuthorsController) => {
   router.get('/:id', async function(req: Request<{ id: string }>, res: Response, next: NextFunction) {
     await controller.getAllAuthors(req, res, next);
   });
+
+  router.delete('/:id', async function(req: Request<{ id: string }>, res: Response, next: NextFunction) {
+    await controller.deleteAuthorById(req, res, next);
+  });
   
-  router.get('/list', async function(req: Request, res: Response, next: NextFunction) {
+  router.get('/', async function(req: Request, res: Response, next: NextFunction) {
     await controller.getAllAuthors(req, res, next);
   });
 

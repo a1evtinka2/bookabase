@@ -8,7 +8,7 @@ const createUsersRouter = (controller: UserController) => {
     await controller.getAllUsers(req, res, next);
   });
   
-  router.get('/list', async function(req: Request, res: Response, next: NextFunction) {
+  router.get('/', async function(req: Request, res: Response, next: NextFunction) {
     await controller.getAllUsers(req, res, next);
   });
 

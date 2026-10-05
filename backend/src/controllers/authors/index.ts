@@ -22,7 +22,7 @@ export class AuthorsController {
     }
   }
 
-    public async getAuthorById(
+  public async getAuthorById(
         req: Request<{ id: string }>, 
         res: Response, 
         next: NextFunction) {
@@ -31,6 +31,20 @@ export class AuthorsController {
 
         const authors = await this.authorsService.fetchAuthor(id);
         res.status(200).json(authors);
+    } catch (error) {
+        next(error);
+    }
+  }
+
+  public async deleteAuthorById(
+        req: Request<{ id: string }>, 
+        res: Response, 
+        next: NextFunction) {
+    try {
+        const { id } = req.params;
+
+        const deleted = await this.authorsService.deleteAuthor(id);
+        res.status(200).json(deleted);
     } catch (error) {
         next(error);
     }

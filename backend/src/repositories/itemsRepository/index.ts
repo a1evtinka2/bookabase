@@ -1,10 +1,10 @@
 import pool, { db } from "../../database/index.ts";
 import { AppError } from "../../models/error.ts";
-import type { ItemType } from "../../models/items.ts";
+import type { ItemData, ItemType, ItemTypeExt } from "../../models/items.ts";
 
 export class ItemsRepository {
 
-  async getAllItems(): Promise<ItemType[]> {
+  async getAllItems(): Promise<ItemTypeExt[]> {
     try {
       const result = await db.query(
         `SELECT 
@@ -24,7 +24,7 @@ export class ItemsRepository {
     }
   }
 
-    async getItem(id: string): Promise<ItemType> {
+    async getItem(id: string): Promise<ItemTypeExt> {
     try {
       const result = await db.query(
         `SELECT 
@@ -46,7 +46,7 @@ export class ItemsRepository {
     }
   }
 
-  async create(item: ItemType) {
+  async create(item: ItemType): Promise<ItemType> {
     try {
       const { id, title, normalizedTitle, type, authorId} = item; 
       const result = await db.query(

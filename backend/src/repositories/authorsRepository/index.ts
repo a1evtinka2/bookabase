@@ -7,7 +7,7 @@ export class AuthorsRepository {
   async getAllAuthors(): Promise<Author[]> {
     try {
       const result = await db.query(
-        `SELECT * FROM authors`);
+        `SELECT id, "firstName", surname FROM authors`);
       return result.rows;
     } catch (error: any) {
       throw new Error(`Error fetching authors: ${error.message}`);
@@ -21,6 +21,16 @@ export class AuthorsRepository {
       return result.rows[0];
     } catch (error: any) {
       throw new Error(`Error fetching author: ${error.message}`);
+    }
+  }
+
+    async deleteAuthor(id: string): Promise<boolean> {
+    try {
+      await db.query(
+        `DELETE FROM authors WHERE id = $1`, [id]);
+      return true;
+    } catch (error: any) {
+      throw new Error(`Error deleting author: ${error.message}`);
     }
   }
 

@@ -4,7 +4,7 @@ import type { ItemsController } from '../../controllers/items/index.ts';
 const createItemsRouter = (controller: ItemsController) => {
   const router = Router();
 
-  router.get('/list', async function(req: Request, res: Response, next: NextFunction) {
+  router.get('/', async function(req: Request, res: Response, next: NextFunction) {
     await controller.getAllItems(req, res, next);
   });
 
