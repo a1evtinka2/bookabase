@@ -1,6 +1,6 @@
-import pool, { db } from "../../database/index.ts";
+import { db } from "../../database/index.ts";
 import { AppError } from "../../models/error.ts";
-import type { ItemData, ItemType, ItemTypeExt } from "../../models/items.ts";
+import type { ItemType, ItemTypeExt } from "../../models/items.ts";
 
 export class ItemsRepository {
 
