@@ -6,13 +6,24 @@ export class UserRepository {
 
   async getAllUsers(): Promise<User[]> {
     try {
-      console.log('Repository: before query');
       
       const result = await db.query(
         `SELECT * FROM users`);
-      console.log('Repository: after query');
 
       return result.rows;
+    } catch (error: any) {
+      throw new Error(`Error fetching user: ${error.message}`);
+    }
+  }
+
+    async getUser(userId: string): Promise<User> {
+    try {
+      
+      const result = await db.query(
+        `SELECT * FROM users
+        WHERE id=$1`, [userId]);
+
+      return result.rows[0];
     } catch (error: any) {
       throw new Error(`Error fetching user: ${error.message}`);
     }

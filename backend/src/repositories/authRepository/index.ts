@@ -1,5 +1,5 @@
 import { db } from "../../database/index.ts";
-import type { AuthData, RegistrationData } from "../../models/auth.ts";
+import type { AuthData, OpenIdTokenData, RegistrationData } from "../../models/auth.ts";
 import { AppError } from "../../models/error.ts";
 
 export class AuthRepository {
@@ -31,13 +31,26 @@ export class AuthRepository {
     }
   }
 
-    async login(user: AuthData): Promise<boolean> {
+  async login(user: AuthData): Promise<boolean> {
     try {
       const { nickname } = user; 
       const result = await db.query(
         `SELECT * FROM users 
          WHERE nickname = $1`, [nickname]);
       return result.rows[0];
+    } catch (error: any) {
+      throw new AppError(error.code, error.message);
+    }
+  }
+
+  async findUserInAuthIdentities(openIdTokenData: OpenIdTokenData): Promise<null | string> {
+    try {
+      const { issuer, subject } = openIdTokenData; 
+      const result = await db.query(
+        `SELECT "userId"
+         FROM auth_identities
+         WHERE issuer = $1 AND subject = $2;`, [issuer, subject]);
+      return result.rows[0] ?? null;
     } catch (error: any) {
       throw new AppError(error.code, error.message);
     }

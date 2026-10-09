@@ -13,17 +13,51 @@ import { ItemsRepository } from './repositories/itemsRepository/index.ts';
 import { ItemsService } from './services/items/itemsService.ts';
 import { ItemsController } from './controllers/items/index.ts';
 import createItemsRouter from './routes/items/index.ts';
-import { JwksClient } from 'jwks-rsa';
-import { type Response, type Request, type NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import { AuthRepository } from './repositories/authRepository/index.ts';
 import { AuthService } from './services/auth/index.ts';
 import { AuthController } from './controllers/auth/index.ts';
 import createAuthRouter from './routes/auth/index.ts';
-import * as client from 'openid-client'
-
+import * as client from 'openid-client';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import getRequiredEnv from './helpers/getRequiredEnv.ts';
 
 const app: Express = express();
+
+app.use(cookieParser());
+
+app.use(session({
+    secret: getRequiredEnv('SESSION_SECRET'),
+    saveUninitialized: false,
+    resave: false,
+    cookie: function (req) {
+      return {
+        httpOnly: true,
+        secure: req.secure || false,
+        maxAge: 60000,
+      };
+    },
+}));
+
+const google = new URL( 'https://accounts.google.com' );
+let serverMy: URL = google;
+let clientId: string = process.env.GOOGLE_CLIENT_ID || '';
+let clientSecret: string = process.env.GOOGLE_CLIENT_SECRET || '';
+
+let config: client.Configuration = await client.discovery(
+  serverMy,
+  clientId,
+  clientSecret,
+)
+
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    methods: 'GET,POST,GET,DELETE', 
+    allowedHeaders: 'Content-Type,Authorization' 
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
 
 const userRepository = new UserRepository();
 const authorsRepository = new AuthorsRepository();
@@ -34,7 +68,7 @@ const authRepository = new AuthRepository();
 const userService =  new UserService(userRepository);
 const authorsService =  new AuthorsService(authorsRepository);
 const itemsService =  new ItemsService(itemsRepository);
-const authService =  new AuthService(authRepository);
+const authService =  new AuthService(authRepository, userRepository, client, config);
 
 const userController = new UserController(userService)
 const authorsController = new AuthorsController(authorsService)
@@ -46,87 +80,21 @@ const authorsRouter = createAuthorsRouter(authorsController)
 const itemsRouter = createItemsRouter(itemsController)
 const authRouter = createAuthRouter(authController)
 
-const corsOptions = {
-    origin: 'http://localhost:5173',
-    methods: 'GET,POST,GET,DELETE', 
-    allowedHeaders: 'Content-Type,Authorization' 
-};
-
-app.use(cors(corsOptions));
-app.use(express.json());
-
 app.use('/users', userRouter);
 app.use('/authors', authorsRouter);
 app.use('/items', itemsRouter);
 app.use('/auth', authRouter);
 
-
 app.use(errorHandler);
 
-const google = new URL( 'https://accounts.google.com' );
-let server: URL = google;
-let clientId: string = process.env.GOOGLE_CLIENT_ID || '';
-let clientSecret: string = process.env.GOOGLE_CLIENT_SECRET || '';
-
-let config: client.Configuration = await client.discovery(
-  server,
-  clientId,
-  clientSecret,
-)
-
-let code_verifier: string = client.randomPKCECodeVerifier()
-let code_challenge: string = await client.calculatePKCECodeChallenge(code_verifier)
- 
-// Parameters for the authorization URL
-let parameters: Record<string, string> = {
-  redirect_uri: 'https://localhost:3000',
-  scope: 'openid profile email api:read',
-  code_challenge,
-  code_challenge_method: 'S256',
-}
- 
-/**
- * Backward compatibility: Use 'state' if the server doesn't support PKCE.
- * openid-client provides a helper to check this in metadata.
- */
-let state: string | undefined
-if (!config.serverMetadata().supportsPKCE()) {
-  state = client.randomState()
-  parameters.state = state
-}
- 
-let redirectTo: URL = client.buildAuthorizationUrl(config, parameters)
-// Redirect the user to redirectTo.href
-
-let currentUrl: URL = new URL(window.location.href)
- 
-let tokens: client.TokenEndpointResponse = await client.authorizationCodeGrant(
-  config,
-  currentUrl,
-  {
-    pkceCodeVerifier: code_verifier, // Recovered from session
-    expectedState: state,           // Recovered from session if used
-  },
-)
-
-if (tokens.id_token) {
-  // const claims = tokens?.claims?.()
-  console.log('User Subject ID:', tokens?.claims)
-}
- 
-// Accessing a protected API
-// let response = await client.fetchProtectedResource(
-//   config,
-//   tokens.access_token,
-//   new URL('https://api.example.com/data'),
-//   'GET'
-// )
-
-
-process.on('exit', (code) => {
-  console.log('NODE EXITING, CODE:', code);
-});
-
-app.listen(process.env.PORT, () => {
-  console.log(`Bookabase app listening on port ${process.env.PORT}`);
+app.listen(process.env.PORT, (err) => {
+  if (err && 'code' in err) {
+        if (err.code === 'EADDRINUSE') {
+            console.error(`Port ${process.env.PORT} is already in use.`);
+        } else {
+            console.error('Server error:', err);
+        }
+    } else {
+        console.log(`Bookabase app listening on port ${process.env.PORT}`);
+    }
 });

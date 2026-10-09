@@ -14,11 +14,7 @@ export class UserController {
     res: Response, 
     next: NextFunction) {
     try {
-      console.log('Controller: before service');
-      
         const users = await this.userService.fetchUsers();
-        console.log('Controller: before response');
-        
 
         res.status(200).json(users);
     } catch (error) {

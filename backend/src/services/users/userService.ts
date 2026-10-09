@@ -12,10 +12,8 @@ export class UserService {
   }
 
   fetchUsers = async () => {
-    console.log('Service: before repository');
     
     const allUsers = await this.userRepository.getAllUsers();
-    console.log('Service: after repository');
     
     return allUsers;
 }
