@@ -33,8 +33,9 @@ app.use(session({
     cookie: function (req) {
       return {
         httpOnly: true,
-        secure: req.secure || false,
+        secure: false,
         maxAge: 60000,
+        sameSite: 'lax',
       };
     },
 }));
@@ -53,7 +54,8 @@ let config: client.Configuration = await client.discovery(
 const corsOptions = {
     origin: 'http://localhost:5173',
     methods: 'GET,POST,GET,DELETE', 
-    allowedHeaders: 'Content-Type,Authorization' 
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials: true,
 };
 
 app.use(cors(corsOptions));

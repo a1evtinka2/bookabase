@@ -2,31 +2,24 @@ import './App.css';
 import BookShellPage from './pages/BookShellPage';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import RegistrationPage from './pages/RegistrationPage';
 
-
-function About() {
-  return <h1>About Page</h1>;
-}
-
-function Contact() {
-  return <h1>Contact Page</h1>;
-}
 
 function App() {
   return (
     <BrowserRouter>
-      {/* Navigation */}
-      <nav>
-        <Link to="/">Home</Link> |{" "}
-        <Link to="/about">About</Link> |{" "}
-        <Link to="/contact">Contact</Link>
-      </nav>
+      {/* <nav>
+        <Link to="/about"><span className="font-mono font-medium text-muted-foreground">about</span></Link> {" "}
+        <Link to="/contact"><span className="font-mono font-medium text-muted-foreground">contact</span></Link> {" "}
+        <Link to="/logout"><span className="font-mono font-medium text-muted-foreground">logout</span></Link>
 
-      {/* Routes */}
+      </nav> */}
+
       <Routes>
         <Route path="/" element={<BookShellPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/register" element={<RegistrationPage />} />
+        {/* <Route path="/contact" element={<Contact />} /> */}
       </Routes>
     </BrowserRouter>
   );

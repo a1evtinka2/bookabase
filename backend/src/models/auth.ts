@@ -15,6 +15,11 @@ export interface OpenIdTokenData {
     subject: string,
 }
 
+export interface AuthIdentitiesData extends OpenIdTokenData {
+    id: string,
+    userId: string,
+}
+
 export interface OpenIdData {
     code_verifier: string,
     code_challenge: string,

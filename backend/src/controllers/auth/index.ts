@@ -55,12 +55,25 @@ export class AuthController {
 
         const existingUser = await this.authService.authWithGoogle({ openIdData, url });
 
-        if (existingUser) {
+        console.log(existingUser, 'existingUser');
+        if (existingUser && 'id' in existingUser) {
             req.session.userId = existingUser.id
+            // req.session.currentUrl = url
             await req.session.save();
-            return res.status(200).send("Your are logged in");
-        } else {
-          res.status(303).json('Registration needed');
+            return res.redirect('http://localhost:5173');
+
+        } else if (existingUser) {
+          const pendingGoogleRegistration: OpenIdTokenData = {
+            issuer: existingUser.issuer,
+            subject: existingUser.subject
+          }
+          req.session.pendingGoogleRegistration = pendingGoogleRegistration;
+          await req.session.save();
+          console.log('Google callback:', {
+  sessionID: req.sessionID,
+  pending: req.session.pendingGoogleRegistration,
+});
+          res.redirect('http://localhost:5173/register');
         }
     } catch (error) {
         next(error);
@@ -86,10 +99,28 @@ export class AuthController {
     res: Response, 
     next: NextFunction) {
     try {
-        const authData: RegistrationData = req.body;
-        const newAuthor = await this.authService.register(authData);
+      // console.log(req, 'reeeeq');
+      console.log('Registration request:', {
+  sessionID: req.sessionID,
+  pending: req.session.pendingGoogleRegistration,
+});
+      
+          const pendingGoogleRegistration = req.session.pendingGoogleRegistration;
+        console.log(pendingGoogleRegistration, 'openIdData');
+        
+        if (!pendingGoogleRegistration) {
+          res.status(303).json('Failed to authenticate with Google');
+          return;
+        };
 
-        res.status(200).json(newAuthor);
+        // const existingUser = await this.authService.authWithGoogle({ openIdData, url });
+
+        const authData: RegistrationData = req.body;
+
+        const newAuthor = await this.authService.register(authData, pendingGoogleRegistration);
+        // res.redirect('http://localhost:5173');
+        res.status(201).json('Logged In')
+
     } catch (error) {
         next(error);
     }

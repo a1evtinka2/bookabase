@@ -6,6 +6,7 @@ import getRandomColor from '../utils/getRandomColor';
 import { CreateBookModal } from '../components/AddBookForm';
 import Rating from '../ui-kit/rating';
 import Tag from '../ui-kit/tag';
+import PageTemplate from './PageTemplate';
 
 function BookShellPage() {
   const [nickname, setName] = useState('');
@@ -110,39 +111,7 @@ function BookShellPage() {
   }, [nickname, dateOfBirth]);
 
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground">
-      {/* Glow layer */}
-      <div className="pointer-events-none fixed inset-0 -z-0 overflow-hidden">
-        {/* Top-left glow */}
-        <div
-          className="
-        absolute
-        -left-32
-        -top-44
-        h-[36rem]
-        w-[36rem]
-        rounded-full
-        bg-glow-cool
-        opacity-50
-        blur-[110px]
-      "
-        />
-
-        {/* Bottom-right glow */}
-        <div
-          className="
-        absolute
-        -bottom-48
-        -right-24
-        h-[32rem]
-        w-[32rem]
-        rounded-full
-        bg-glow-warm
-        opacity-40
-        blur-[120px]
-      "
-        />
-      </div>
+    <PageTemplate>
       <div className="z-100 mr-40 ml-60 flex flex-row items-end justify-between">
         <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
           {`${items.length} ${getBookDeclension(items.length)}` }. Нажми, чтобы открыть
@@ -259,7 +228,7 @@ function BookShellPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageTemplate>
   );
 }
 

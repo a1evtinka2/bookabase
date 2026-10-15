@@ -2,9 +2,10 @@ import { randomUUID } from "node:crypto";
 import type { AuthData, OpenIdData, OpenIdDataWithUrl, OpenIdTokenData, RegistrationData } from "../../models/auth.ts";
 import type { AuthRepository } from "../../repositories/authRepository/index.ts";
 import type { UserRepository } from "../../repositories/userRepository/index.ts";
-import type { User } from "../../models/user.ts";
+import type { User, UserData } from "../../models/user.ts";
 import * as openIdclient from 'openid-client';
 import getRequiredEnv from "../../helpers/getRequiredEnv.ts";
+import type { UserInfo } from "node:os";
 
 
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
     return author;
   }
 
-  authWithGoogle = async (openIdDataWithUrl: OpenIdDataWithUrl): Promise<User | undefined> => {
+  authWithGoogle = async (openIdDataWithUrl: OpenIdDataWithUrl): Promise<User | OpenIdTokenData | undefined> => {
     const { openIdData, url } =  openIdDataWithUrl;
     
     //TODO
@@ -57,11 +58,13 @@ export class AuthService {
         if (userId) {
           return this.userRepository.getUser(userId)
         } 
+        return { issuer: iss, subject: sub};
       }
   
     }
 
-      return undefined;
+    return undefined;
+
   }
 
 
@@ -102,18 +105,39 @@ export class AuthService {
 
 
 
-  register = async (regData: RegistrationData) => {
-    const { nickname, password, dateOfBirth } = regData;
+  register = async (regData: UserData, googleTokenData?: OpenIdTokenData) => {
+    const { nickname } = regData;
 
-    const normalizedName = nickname?.split(' ').filter((s) => s !== '').join(' ').toLowerCase(); 
+    const normalizedName = nickname?.split(' ').filter((s) => s !== '').join(' '); 
 
     const id = randomUUID();
     
     const userToRegister = {
       ...regData,
       nickname: normalizedName,
+      id,
     };
-    const newAuthor = await this.authRepository.register(userToRegister);
-    return newAuthor;
+    console.log(userToRegister, 'userToRegister');
+    
+    const newUser = await this.userRepository.create(userToRegister);
+    if(newUser) {
+    
+  
+
+    if(googleTokenData) {
+        const { issuer, subject } = googleTokenData;
+        const authId = randomUUID();
+        const newAuthIden = {
+           issuer, 
+           subject,
+           userId: id,
+           id: authId
+        }
+        const userId = await this.authRepository.addUserInAuthIdentities(newAuthIden);
+      
+
+    }
+    return newUser;
   }
+}
 }
