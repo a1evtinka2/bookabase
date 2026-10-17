@@ -7,6 +7,11 @@ import { CreateBookModal } from '../components/AddBookForm';
 import Rating from '../ui-kit/rating';
 import Tag from '../ui-kit/tag';
 import PageTemplate from './PageTemplate';
+import OpenBookModal from '../components/OpenBookModal.tsx';
+import { DarkModeToggle } from '../components/DarkModeToggle/index.tsx';
+import { Candle } from '../components/Candle/index.tsx';
+import heyApiClient from '../api/index.ts';
+import { getItems } from '../client/sdk.gen.ts';
 
 function BookShellPage() {
   const [nickname, setName] = useState('');
@@ -21,6 +26,25 @@ function BookShellPage() {
   const [authors, setAuthors] = useState<any>([]);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+      const mockReviews = [
+      {
+        author: 'mama',
+        text: 'Это очень хорошая книга orem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! '
+      },
+      {
+        author: 'макс',
+        text: 'Это очень хорошая книга orem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! '
+      },
+      {
+        author: 'даша',
+        text: 'Это очень хорошая книга orem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! '
+      },
+            {
+        author: 'наташа',
+        text: 'Это очень хорошая книга orem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! '
+      }
+    ]
 
   const handleCreateBook = (data: { title: string; authorId: string }) => {
     console.log(data);
@@ -39,51 +63,53 @@ function BookShellPage() {
       };
       console.log(requestOptions);
 
-      fetch('http://localhost:3000/items', requestOptions)
-        .then((response) => response.json())
-        .then((newBook) => setItems((old: any) => ([...old, newBook])))
-        .catch((error) => {
-          console.error('Error saving book:', error);
-          setBackendError(error.message); 
-        });
+      // fetch('http://localhost:3000/items', requestOptions)
+      //   .then((response) => response.json())
+      //   .then((newBook) => setItems((old: any) => ([...old, newBook])))
+      //   .catch((error) => {
+      //     console.error('Error saving book:', error);
+      //     setBackendError(error.message); 
+      //   });
   };
 
   useEffect(() => {
-    fetch('http://localhost:3000/items')
-      .then((response) => response.json())
-      .then((data) => setItems(data))
-      .catch((error) => {
-        console.error('Error fetching items:', error);
-      });
+    const fetchItems = async () => {
+    const result = await getItems({ client: heyApiClient });
+    console.log(result, 'res');
+    
+    setItems(result.data)
+  };
+
+  fetchItems();
   }, []);
 
-  useEffect(() => {
-    fetch('http://localhost:3000/authors')
-      .then((response) => response.json())
-      .then((data) => setAuthors(data))
-      .catch((error) => {
-        console.error('Error fetching authors:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch('http://localhost:3000/items')
+  //     .then((response) => response.json())
+  //     .then((data) => setItems(data))
+  //     .catch((error) => {
+  //       console.error('Error fetching authors:', error);
+  //     });
+  // }, []);
 
   useEffect(() => {
     console.log(items, 'iiii');
   }, [items]);
 
-  useEffect(() => {
-    if (selectedId) {
-          fetch(`http://localhost:3000/items/${selectedId}`)
-      .then((response) => response.json())
-      .then((data) => setCurrentItem(data))
-      .catch((error) => {
-        console.error('Error fetching items:', error);
-      });
-      setShowItemInfo(true);
-    } else {
-      setShowItemInfo(false);
-      setCurrentItem(undefined)
-    }
-  }, [selectedId]);
+  // useEffect(() => {
+  //   if (selectedId) {
+  //         fetch(`http://localhost:3000/items/${selectedId}`)
+  //     .then((response) => response.json())
+  //     .then((data) => setCurrentItem(data))
+  //     .catch((error) => {
+  //       console.error('Error fetching items:', error);
+  //     });
+  //     setShowItemInfo(true);
+  //   } else {
+  //     setShowItemInfo(false);
+  //     setCurrentItem(undefined)
+  //   }
+  // }, [selectedId]);
 
   useEffect(() => {
     console.log(nickname, dateOfBirth);
@@ -94,21 +120,23 @@ function BookShellPage() {
         type: 'book',
       };
 
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(item),
-      };
-      console.log(requestOptions);
+      // const requestOptions = {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(item),
+      // };
+      // console.log(requestOptions);
 
-      fetch('http://localhost:3000/items', requestOptions)
-        .then((response) => response.json())
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-          setBackendError(error.message);
-        });
+      // fetch('http://localhost:3000/items', requestOptions)
+      //   .then((response) => response.json())
+      //   .catch((error) => {
+      //     console.error('Error fetching data:', error);
+      //     setBackendError(error.message);
+      //   });
     }
   }, [nickname, dateOfBirth]);
+
+  const stored = localStorage.getItem("theme");
 
   return (
     <PageTemplate>
@@ -125,7 +153,7 @@ function BookShellPage() {
       <div className="flex flex-col items-center">
         {/* Books */}
         <div className="flex h-110 items-end gap-2">
-          {items?.map((i: Item) => {
+          {items && items?.map((i: Item) => {
             const authorsFullName = `${i.author?.firstName} ${i.author?.surname}`;
             return (
               <button
@@ -187,7 +215,16 @@ function BookShellPage() {
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreateBook}
       />
-      {showItemInfo && (
+      <OpenBookModal
+      isOpen={showItemInfo}
+      onClose={() => setShowItemInfo(false)}
+      // onSubmit={(data) => {
+        // console.log(data.nickname, data.dob);
+        // Call your registration function here.
+        // setIsBookOpen(false);
+      // }}
+    />
+      {/* {showItemInfo && (
         <div className="z-100 mr-40 mt-10 ml-60 flex flex-row items-end justify-between gap-30">
           <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white/30">
             <div className="px-6 py-4">
@@ -204,30 +241,26 @@ function BookShellPage() {
               <Tag text="новое" />
             </div>
           </div>
-          <div className="h-60 w-100 rounded overflow-hidden shadow-lg bg-white/30">
-            <div className="px-6 py-4">
+          <div className="h-60 w-200 rounded overflow-hidden shadow-lg bg-white/30 p-10">
               <div className="font-bold font-mono text-xl mb-2 text-muted-foreground">отзывы</div>
-              <div className="flex flex-column items-end justify-between overflow-y-auto">
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
-              </p>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
-              </p>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
-              </p>
-              </div>
+              <div className="max-h-64 overflow-y-auto space-y-4 pb-20">
+                {mockReviews.map((review) => {
+                  return (
+                    <div className="flex flex-col gap-2 items-start text-left">
+                      <div className="text-gray-700 font-serif text-base">{review.author}:</div>
+                      <div className="text-gray-700 text-base">{review.text}</div>
+                      <div className="mt-4 h-px w-300 bg-white" />
+                    </div>
+                  )
+                })}
             </div>
           </div>
         </div>
-      )}
+      )} */}
+      <DarkModeToggle/>
+      {stored === 'dark' && 
+      <Candle></Candle>
+      }
     </PageTemplate>
   );
 }

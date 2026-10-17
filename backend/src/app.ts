@@ -22,7 +22,9 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import getRequiredEnv from './helpers/getRequiredEnv.ts';
 import swaggerUi from "swagger-ui-express";
-import swaggerDocs from './configs/swagger/index.ts';
+import { writeFileSync } from 'node:fs';
+import swaggerJSDoc from 'swagger-jsdoc';
+import options from './configs/swagger/index.ts';
 
 const app: Express = express();
 
@@ -90,6 +92,13 @@ app.use('/items', itemsRouter);
 app.use('/auth', authRouter);
 
 app.use(errorHandler);
+
+const swaggerDocs = swaggerJSDoc(options);
+
+writeFileSync(
+  './openapi.json',
+  JSON.stringify(swaggerDocs, null, 2),
+);
 
 app.use(
   "/api-docs",
