@@ -13,11 +13,11 @@ export interface ItemData {
 
 export interface ItemType extends ItemData {
     id: string,
-    normalizedTitle: string,
+    normalizedTitle?: string,
 }
 
 export interface ItemTypeExt extends ItemType {
-   createdAt: string,
+   createdAt?: string,
    surname: string,
    firstName: string,
 }

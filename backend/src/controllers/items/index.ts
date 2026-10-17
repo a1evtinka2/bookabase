@@ -1,5 +1,6 @@
 import { type Response, type Request, type NextFunction } from 'express';
 import type { ItemsService } from '../../services/items/itemsService.ts';
+import type { ItemData } from '../../models/items.ts';
 
 
 export class ItemsController {
@@ -41,7 +42,7 @@ export class ItemsController {
     res: Response, 
     next: NextFunction) {
     try {
-        const itemData = req.body;
+        const itemData: ItemData = req.body;
         const newAuthor = await this.itemsService.createItem(itemData);
 
         res.status(200).json(newAuthor);

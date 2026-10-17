@@ -11,7 +11,10 @@ export class ItemsService {
   private formatItems = (items: ItemTypeExt[]): ItemWithAuthorType[] => {
     const itemsWithAuthor = items.map((i) => {
       return {
-        ...i,
+        id: i.id,
+        authorId: i.authorId,
+        type: i.type,
+        title: i.title,
         author: {
           firstName: i.firstName,
           surname: i.surname,
