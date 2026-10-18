@@ -1,4 +1,4 @@
-import { createClient } from "../client/client";
+import { createClient } from '../client/client';
 
 const heyApiClient = createClient({
   baseUrl: 'http://localhost:3000',

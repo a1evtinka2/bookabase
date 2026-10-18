@@ -1,13 +1,19 @@
+import { useTheme } from "../../providers/ThemeProvider";
+import { DarkModeToggle } from "../DarkModeToggle";
+
 type PageTemplateProps = {
   children: React.ReactNode;
-}
+};
 
 function PageTemplate({ children }: PageTemplateProps) {
-
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground overflow-y-hidden">
-      {/* Glow layer */}
-      <div className="pointer-events-none fixed inset-0 -z-0 overflow-hidden">
+    <div className={`${!isLight && 'reading-room'} relative min-h-screen w-full bg-background text-foreground overflow-y-hidden`}>
+      <div className="fixed bottom-4 right-4 z-50">
+        <DarkModeToggle />
+      </div>
+      {theme === 'light' && <div className="pointer-events-none fixed inset-0 -z-0 overflow-hidden">
         {/* Top-left glow */}
         <div
           className="
@@ -37,11 +43,8 @@ function PageTemplate({ children }: PageTemplateProps) {
         blur-[120px]
       "
         />
-      </div>
-
+      </div>}
       {children}
-     
-
     </div>
   );
 }
