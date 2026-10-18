@@ -1,75 +1,55 @@
+import type { Item } from '../../client';
+import getBookHeight from '../../utils/getBookHeight';
 import getRandomColor from '../../utils/getRandomColor';
 
 type BookSpineProps = {
-  title: string;
-  className?: string;
+  bookItem: Item;
+  onNewClick: (bookId: string) => void;
+  index: number;
   isNew?: boolean;
-  onNewClick?: () => void;
 };
 
 export function BookSpine({
-  title,
-  className = '',
-  isNew = false,
+  bookItem,
   onNewClick,
+  index,
+  isNew = false,
 }: BookSpineProps) {
+  const authorsFullName = `${bookItem.author?.firstName} ${bookItem.author?.surname}`;
   const color = getRandomColor();
   return (
-    <div
-      className={`
-        group relative
-        // ${isNew ? 'h-12 w-84' : 'h-64 w-12'}
-        overflow-hidden
-        rounded-sm
-        border border-black/20
-        bg-gradient-to-r
-        shadow-[3px_4px_8px_rgba(0,0,0,0.25)]
-        transition-transform
-        duration-200
-        hover:-translate-y-1
-        hover:shadow-[5px_7px_12px_rgba(0,0,0,0.3)]
-        ${className}
-      `}
-      style={{ backgroundColor: color }}
-      onClick={onNewClick}
+    <button
+      key={'sfr'}
+      type="button"
+      onClick={() => onNewClick(bookItem.id)}
+      aria-label={`Pull out ${bookItem.title} by ${authorsFullName}`}
+      className={
+        'relative cursor-pointer rounded-t-xs outline-1 -outline-offset-1 outline-glass-edge ring-1 ring-foreground/10 transition-all duration-300 hover:-translate-y-5 hover:ring-primary/50 hover:shadow-[0_28px_55px_-18px_var(--color-foreground)]'
+        // book.spine,
+        // selectedId === book.id && "-translate-y-3 ring-primary/60",
+      }
+      style={{
+        width: '80px',
+        height: getBookHeight(bookItem.title),
+        backgroundColor: color,
+      }}
     >
-      {/* Верхний декоративный кант */}
-      <div className="absolute inset-x-0 top-3 h-px" />
-      <div className="absolute inset-x-0 top-4 h-px bg-black/20" />
-
-      {/* Нижний декоративный кант */}
-      <div className="absolute inset-x-0 bottom-4 h-px bg-black/20" />
-      <div className="absolute inset-x-0 bottom-3 h-px" />
-
-      {/* Название */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span
-          className={`
-            inline-flex
-            h-12
-            w-fit
-            items-center
-            justify-center
-            rounded-sm
-            bg-amber-800
-            px-6
-
-            max-w-[24rem]
-            ${!isNew && 'rotate-90'}
-            whitespace-nowrap
-            px-2
-            text-center
-            font-serif
-            text-sm
-            font-semibold
-            tracking-wide
-            text-amber-50
-            
-          `}
-        >
-          {title}
+      <div className="pt-4 absolute inset-0 flex items-start justify-center text-grey">
+        <span className="text-sm font-medium">
+          {index < 10 ? `0${index + 1}` : index + 1}
         </span>
       </div>
-    </div>
+
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="rotate-90 whitespace-nowrap text-sm font-medium text-white">
+          {bookItem.title}
+        </span>
+      </div>
+      <div className="pb-2 absolute inset-0 flex items-end justify-center">
+        <span className="whitespace-wrap text-sm font-medium text-white">
+          {authorsFullName}
+        </span>
+      </div>
+    </button>
   );
 }

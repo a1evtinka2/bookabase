@@ -4,7 +4,7 @@ export function DarkModeToggle() {
   const { theme, toggleTheme } = useTheme();
 
   const toggle = () => {
-    toggleTheme()
+    toggleTheme();
   };
 
   return (

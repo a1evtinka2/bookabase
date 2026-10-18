@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prettier": "px prettier --write ."
+    "prettier": "npx prettier --write ."
   },
   "dependencies": {
     "@hey-api/client-fetch": "^0.13.1",

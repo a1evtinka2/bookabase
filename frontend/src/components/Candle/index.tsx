@@ -1,11 +1,7 @@
-import './index.css'
+import './index.css';
 export function Candle() {
   return (
-    <div
-      className="candle-scene"
-      role="img"
-      aria-label="candle silhouette"
-    >
+    <div className="candle-scene" role="img" aria-label="candle silhouette">
       <div className="candle-flame">
         <div className="candle-flame-core" />
       </div>
