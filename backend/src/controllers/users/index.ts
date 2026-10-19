@@ -22,6 +22,21 @@ export class UserController {
     }
   }
 
+    public async getUserById(
+    req: Request<{ id: string }>, 
+    res: Response, 
+    next: NextFunction) {
+    try {
+        const { id } = req.params;
+
+        const users = await this.userService.fetchUserById(id);
+
+        res.status(200).json(users);
+    } catch (error) {
+        next(error);
+    }
+  }
+
   public async createUser(req: Request, res: Response, next: NextFunction) {
     try {
         const userData = req.body;

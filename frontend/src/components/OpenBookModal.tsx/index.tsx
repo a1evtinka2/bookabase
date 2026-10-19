@@ -23,7 +23,7 @@ export default function OpenBookModal({
         <>
           <div className="book-leaf book-leaf-left">
             <div>
-              <h1 className="font-lobster">Kniga</h1>
+              <h3 className="font-pacifico">Kniga</h3>
               <div className="font-flex items-center justify-center gap-10">
                 {mockReviews.map((r: any) => (
                   <>

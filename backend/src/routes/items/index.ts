@@ -89,14 +89,14 @@ const createItemsRouter = (controller: ItemsController) => {
 
 /**
   * @swagger
-  * /items/{itemId}:
+  * /items/{id}:
   *   get:
   *     tags:
   *       - Items
   *     summary: Retrieve a list of items
   *     parameters:
   *      - in: path
-  *        name: itemId
+  *        name: id
   *        schema:
   *          type: string
   *          format: uuid
@@ -114,6 +114,7 @@ const createItemsRouter = (controller: ItemsController) => {
   router.get('/:id', async function(req: Request<{ id: string }>, res: Response, next: NextFunction) {
     await controller.getItemById(req, res, next);
   });
+  
 /**
   * @swagger
   * /items:

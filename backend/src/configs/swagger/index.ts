@@ -11,6 +11,10 @@ const options = {
         name: 'Items',
         description: 'Items management',
       },
+      {
+        name: 'Users',
+        description: 'Users management',
+      },
     ],
   },
   apis: ['./src/routes/**/*.ts'],

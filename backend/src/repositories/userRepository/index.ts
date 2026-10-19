@@ -1,6 +1,6 @@
-import pool, { db } from "../../database/index.ts";
+import { db } from "../../database/index.ts";
 import { AppError } from "../../models/error.ts";
-import type { UserData, User } from "../../models/user.ts";
+import type { User } from "../../models/user.ts";
 
 export class UserRepository {
 
@@ -8,7 +8,11 @@ export class UserRepository {
     try {
       
       const result = await db.query(
-        `SELECT * FROM users`);
+        `SELECT
+          users.id,
+          users.nickname,
+          users."dateOfBirth"   
+         FROM users`);
 
       return result.rows;
     } catch (error: any) {
@@ -16,11 +20,15 @@ export class UserRepository {
     }
   }
 
-    async getUser(userId: string): Promise<User> {
+  async getUser(userId: string): Promise<User> {
     try {
       
       const result = await db.query(
-        `SELECT * FROM users
+        `SELECT
+          users.id,
+          users.nickname,
+          users."dateOfBirth"    
+        FROM users
         WHERE id=$1`, [userId]);
 
       return result.rows[0];

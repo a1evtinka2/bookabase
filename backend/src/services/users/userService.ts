@@ -12,10 +12,15 @@ export class UserService {
   }
 
   fetchUsers = async () => {
-    
     const allUsers = await this.userRepository.getAllUsers();
     
     return allUsers;
+}
+
+  fetchUserById = async (id: string) => {
+    const user = await this.userRepository.getUser(id);
+    
+    return user;
 }
 
   createUser = async (userData: UserData) => {
