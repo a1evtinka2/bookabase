@@ -13,7 +13,6 @@ const createUsersRouter = (controller: UserController) => {
   *         - id
   *         - nickname
   *         - dateOfBirth
-  *     
   *       properties:
   *         id: 
   *           type: string 
@@ -22,12 +21,10 @@ const createUsersRouter = (controller: UserController) => {
   *           type: string
   *         dateOfBirth:
   *           type: string
-  * 
   *     UserCreate:
   *       required:
   *         - nickname
   *         - dateOfBirth
-  *     
   *       properties:
   *         nickname:
   *           type: string
@@ -72,7 +69,7 @@ const createUsersRouter = (controller: UserController) => {
   *          type: string
   *          format: uuid
   *        required: true
-  *        description: Numeric ID of the user to get
+  *        description: UUID of the user to get
   *     responses:
   *       '200':
   *         description: Get a user by id

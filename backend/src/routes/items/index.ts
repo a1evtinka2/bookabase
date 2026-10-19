@@ -11,7 +11,6 @@ const createItemsRouter = (controller: ItemsController) => {
   *     Author:
   *       required:
   *         - firstName
-  *     
   *       properties:
   *         firstName: 
   *           type: string 
@@ -25,7 +24,6 @@ const createItemsRouter = (controller: ItemsController) => {
   *         - title
   *         - id
   *         - author
-  * 
   *       properties:
   *         authorId:
   *           type: string
@@ -47,7 +45,6 @@ const createItemsRouter = (controller: ItemsController) => {
   *         - authorId
   *         - type
   *         - title
-  *     
   *       properties:
   *         authorId: 
   *           type: string 
@@ -101,7 +98,7 @@ const createItemsRouter = (controller: ItemsController) => {
   *          type: string
   *          format: uuid
   *        required: true
-  *        description: Numeric ID of the item to get
+  *        description: UUID of the item to get
   *     responses:
   *       '200':
   *         description: Get an item by id
@@ -114,7 +111,7 @@ const createItemsRouter = (controller: ItemsController) => {
   router.get('/:id', async function(req: Request<{ id: string }>, res: Response, next: NextFunction) {
     await controller.getItemById(req, res, next);
   });
-  
+
 /**
   * @swagger
   * /items:

@@ -10,7 +10,7 @@ import OpenBookModal from '../components/OpenBookModal.tsx';
 import { DarkModeToggle } from '../components/DarkModeToggle/index.tsx';
 import { Candle } from '../components/Candle/index.tsx';
 import heyApiClient from '../api/index.ts';
-import { getItems, getItemsByItemId } from '../client/sdk.gen.ts';
+import { getItems, getItemsById } from '../client/sdk.gen.ts';
 import PageTemplate from '../components/PageTemplate/index.tsx';
 import { useTheme } from '../providers/ThemeProvider.tsx';
 import { BookSpine } from '../components/BookSpine/index.tsx';
@@ -97,10 +97,10 @@ function BookShellPage() {
     console.log(items, 'iiii');
   }, [items]);
 
-  const fetchItemById = async (itemId: string) => {
-    const result = await getItemsByItemId({
+  const fetchItemById = async (id: string) => {
+    const result = await getItemsById({
       client: heyApiClient,
-      path: { itemId },
+      path: { id },
     });
 
     setCurrentItem(result.data);

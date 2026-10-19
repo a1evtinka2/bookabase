@@ -43,7 +43,7 @@ export class AuthRepository {
     }
   }
 
-  async findUserInAuthIdentities(openIdTokenData: OpenIdTokenData): Promise<null | string> {
+  async findUserInAuthIdentities(openIdTokenData: OpenIdTokenData): Promise<null | { userId: string}> {
     try {
       const { issuer, subject } = openIdTokenData; 
       const result = await db.query(

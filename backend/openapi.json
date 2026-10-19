@@ -83,7 +83,7 @@
               "format": "uuid"
             },
             "required": true,
-            "description": "Numeric ID of the user to get"
+            "description": "UUID of the user to get"
           }
         ],
         "responses": {
@@ -166,7 +166,7 @@
               "format": "uuid"
             },
             "required": true,
-            "description": "Numeric ID of the item to get"
+            "description": "UUID of the item to get"
           }
         ],
         "responses": {

@@ -56,7 +56,9 @@ export class AuthService {
         const { iss, sub } = tokenData;
         const userId = await this.authRepository.findUserInAuthIdentities({ issuer: iss, subject: sub});
         if (userId) {
-          return this.userRepository.getUser(userId)
+          console.log(userId, 'userId');
+          
+          return this.userRepository.getUser(userId.userId)
         } 
         return { issuer: iss, subject: sub};
       }
