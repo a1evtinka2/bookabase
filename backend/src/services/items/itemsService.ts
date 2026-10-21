@@ -54,4 +54,20 @@ export class ItemsService {
     const newItem = await this.itemsRepository.create(itemToCreate);
     return newItem;
   }
+
+    createItemWithAuthor = async (itemData: ItemData) => {
+    const title = itemData.title;
+    
+    const normalizedTitle = title?.split(' ').filter((s) => s !== '').join(' ').toLowerCase(); 
+
+    const id = randomUUID();
+    
+    const itemToCreate = {
+      ...itemData,
+      id,
+      normalizedTitle,
+    };
+    const newItem = await this.itemsRepository.create(itemToCreate);
+    return newItem;
+  }
 }

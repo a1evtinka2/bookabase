@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { AuthorsRepository } from "../../repositories/authorsRepository/index.ts";
-import type { AuthorsData } from "../../models/authors.ts";
+import type { Author, AuthorsData } from "../../models/authors.ts";
 
 export class AuthorsService {
   private authorsRepository: AuthorsRepository;
@@ -24,7 +24,7 @@ export class AuthorsService {
     return deleted;
   }
 
-  createAuthor = async (authorData: AuthorsData) => {
+  createAuthor = async (authorData: AuthorsData): Promise<Author> => {
     const { firstName, surname } = authorData;
     const fullName = surname ? `${firstName} ${surname}` : firstName;
 

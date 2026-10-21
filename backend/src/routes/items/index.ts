@@ -40,6 +40,21 @@ const createItemsRouter = (controller: ItemsController) => {
   *           type: object
   *           $ref: '#/components/schemas/Author'
   * 
+  *     ItemCreateWithNewAuthor:
+  *       required:
+  *         - author
+  *         - type
+  *         - title
+  *       properties:
+  *         author: 
+  *           type: object
+  *           $ref: '#/components/schemas/Author'
+  *         type:
+  *           type: string
+  *           enum: [book, film]
+  *         title:
+  *           type: string
+  * 
   *     ItemCreate:
   *       required:
   *         - authorId
@@ -136,6 +151,32 @@ const createItemsRouter = (controller: ItemsController) => {
   */
   router.post('/', async function(req: Request, res: Response, next: NextFunction) {
     await controller.createItem(req, res, next);
+  });
+
+  /**
+  * @swagger
+  * /items/with-new-author:
+  *   post:
+  *     tags:
+  *       - Items
+  *     summary: Create an item with new author
+  *     requestBody:
+  *       required: true
+  *       content:
+  *         application/json:
+  *           schema:
+  *             $ref: "#/components/schemas/ItemCreateWithNewAuthor"
+  *     responses:
+  *       '200':
+  *         description: Item created with new author
+  *         content:
+  *           application/json:
+  *             schema:
+  *               $ref: '#/components/schemas/Item'
+  * 
+  */
+  router.post('/with-new-author', async function(req: Request, res: Response, next: NextFunction) {
+    await controller.createItemWithNewAuthor(req, res, next);
   });
 
   return router;

@@ -1,4 +1,5 @@
-import type { Author } from '../../dto/authors';
+import { useState } from "react";
+import type { Author } from "../../client";
 
 type CreateBookModalProps = {
   isOpen: boolean;
@@ -15,6 +16,8 @@ export function CreateBookModal({
 }: CreateBookModalProps) {
   if (!isOpen) return null;
 
+  const [isNew, setIsNew] = useState(false);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -25,6 +28,17 @@ export function CreateBookModal({
       authorId: formData.get('authorId') as string,
     });
   };
+
+  const checkIfNew = (e: React.SyntheticEvent<HTMLSelectElement, Event>) => {
+    e.preventDefault();
+
+    const newAuthor = e.target.value;
+    setIsNew(newAuthor === 'new')
+    
+
+  };
+
+   
 
   return (
     <div
@@ -84,10 +98,14 @@ export function CreateBookModal({
               name="authorId"
               required
               defaultValue=""
+              onChange={checkIfNew}
               className="w-full rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             >
               <option value="" disabled>
                 кто написал
+              </option>
+              <option key={'new'} value={'new'}>
+                  {'Добавить автора'}
               </option>
 
               {authors.map((author) => (
@@ -97,6 +115,41 @@ export function CreateBookModal({
               ))}
             </select>
           </div>
+          {isNew && 
+          <div className="flex flex-row gap-5">
+          <div>
+            <label
+              htmlFor="author-name"
+              className="mb-2 block text-sm font-medium text-foreground"
+            >
+              Имя
+            </label>
+
+            <input
+              id="author-name"
+              name="name"
+              type="text"
+              required
+              className="w-full rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="author-surname"
+              className="mb-2 block text-sm font-medium text-foreground"
+            >
+              Фамилия
+            </label>
+
+            <input
+              id="author-surname"
+              name="surname"
+              type="text"
+              required
+              className="w-full rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-foreground/40 focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+          </div>}
 
           {/* Buttons */}
           <div className="flex justify-end gap-3 pt-2">

@@ -11,6 +11,10 @@ export interface ItemData {
     title: string,
 }
 
+export interface ItemWithAuthorData extends ItemData {
+    author: AuthorsData
+}
+
 export interface ItemType extends ItemData {
     id: string,
     normalizedTitle?: string,

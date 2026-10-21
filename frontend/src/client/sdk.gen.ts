@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { GetItemsByIdData, GetItemsByIdResponses, GetItemsData, GetItemsResponses, GetUsersByIdData, GetUsersByIdResponses, GetUsersData, GetUsersResponses, PostItemsData, PostItemsResponses, PostUsersData, PostUsersResponses } from './types.gen.js';
+import type { GetAuthorsData, GetAuthorsResponses, GetItemsByIdData, GetItemsByIdResponses, GetItemsData, GetItemsResponses, GetUsersByIdData, GetUsersByIdResponses, GetUsersData, GetUsersResponses, PostAuthorsData, PostAuthorsResponses, PostItemsData, PostItemsResponses, PostItemsWithNewAuthorData, PostItemsWithNewAuthorResponses, PostUsersData, PostUsersResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -61,3 +61,32 @@ export const postItems = <ThrowOnError extends boolean = false>(options: Options
  * Retrieve a list of items
  */
 export const getItemsById = <ThrowOnError extends boolean = false>(options: Options<GetItemsByIdData, ThrowOnError>): RequestResult<GetItemsByIdResponses, unknown, ThrowOnError> => (options.client ?? client).get<GetItemsByIdResponses, unknown, ThrowOnError>({ url: '/items/{id}', ...options });
+
+/**
+ * Create an item with new author
+ */
+export const postItemsWithNewAuthor = <ThrowOnError extends boolean = false>(options: Options<PostItemsWithNewAuthorData, ThrowOnError>): RequestResult<PostItemsWithNewAuthorResponses, unknown, ThrowOnError> => (options.client ?? client).post<PostItemsWithNewAuthorResponses, unknown, ThrowOnError>({
+    url: '/items/with-new-author',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Retrieve a list of authors
+ */
+export const getAuthors = <ThrowOnError extends boolean = false>(options?: Options<GetAuthorsData, ThrowOnError>): RequestResult<GetAuthorsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetAuthorsResponses, unknown, ThrowOnError>({ url: '/authors', ...options });
+
+/**
+ * Create an author
+ */
+export const postAuthors = <ThrowOnError extends boolean = false>(options: Options<PostAuthorsData, ThrowOnError>): RequestResult<PostAuthorsResponses, unknown, ThrowOnError> => (options.client ?? client).post<PostAuthorsResponses, unknown, ThrowOnError>({
+    url: '/authors',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});

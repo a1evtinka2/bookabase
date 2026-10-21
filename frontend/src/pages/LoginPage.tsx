@@ -3,9 +3,10 @@ import { redirect } from 'react-router-dom';
 import image from './books.png';
 import google from './google.png';
 import PageTemplate from '../components/PageTemplate';
+import type { User } from '../client';
 
 function LoginPage() {
-  const [users, setUsers] = useState<any>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const handleGoogle = () => {
     fetch('http://localhost:3000/auth/google')

@@ -18,6 +18,8 @@ export type UserCreate = {
 export type Author = {
     firstName: string;
     surname?: string;
+    id: string;
+    normalizedName?: string;
 };
 
 export type Item = {
@@ -28,10 +30,21 @@ export type Item = {
     author: Author;
 };
 
+export type ItemCreateWithNewAuthor = {
+    author: Author;
+    type: 'book' | 'film';
+    title: string;
+};
+
 export type ItemCreate = {
     authorId: string;
     type: 'book' | 'film';
     title: string;
+};
+
+export type CreateAuthor = {
+    firstName: string;
+    surname?: string;
 };
 
 export type GetUsersData = {
@@ -139,3 +152,51 @@ export type GetItemsByIdResponses = {
 };
 
 export type GetItemsByIdResponse = GetItemsByIdResponses[keyof GetItemsByIdResponses];
+
+export type PostItemsWithNewAuthorData = {
+    body: ItemCreateWithNewAuthor;
+    path?: never;
+    query?: never;
+    url: '/items/with-new-author';
+};
+
+export type PostItemsWithNewAuthorResponses = {
+    /**
+     * Item created with new author
+     */
+    200: Item;
+};
+
+export type PostItemsWithNewAuthorResponse = PostItemsWithNewAuthorResponses[keyof PostItemsWithNewAuthorResponses];
+
+export type GetAuthorsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/authors';
+};
+
+export type GetAuthorsResponses = {
+    /**
+     * A list of authors
+     */
+    200: Array<Author>;
+};
+
+export type GetAuthorsResponse = GetAuthorsResponses[keyof GetAuthorsResponses];
+
+export type PostAuthorsData = {
+    body: CreateAuthor;
+    path?: never;
+    query?: never;
+    url: '/authors';
+};
+
+export type PostAuthorsResponses = {
+    /**
+     * Item created
+     */
+    200: Author;
+};
+
+export type PostAuthorsResponse = PostAuthorsResponses[keyof PostAuthorsResponses];

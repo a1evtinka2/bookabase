@@ -1,19 +1,16 @@
 import { useEffect, useState } from 'react';
 import getBookDeclension from '../utils/getBookDeclension';
-import type { Item } from '../dto/item';
 import getBookHeight from '../utils/getBookHeight';
 import getRandomColor from '../utils/getRandomColor';
 import { CreateBookModal } from '../components/AddBookForm';
-import Rating from '../ui-kit/rating';
-import Tag from '../ui-kit/tag';
 import OpenBookModal from '../components/OpenBookModal.tsx';
-import { DarkModeToggle } from '../components/DarkModeToggle/index.tsx';
 import { Candle } from '../components/Candle/index.tsx';
 import heyApiClient from '../api/index.ts';
-import { getItems, getItemsById } from '../client/sdk.gen.ts';
+import { getAuthors, getItems, getItemsById, postItems } from '../client/sdk.gen.ts';
 import PageTemplate from '../components/PageTemplate/index.tsx';
 import { useTheme } from '../providers/ThemeProvider.tsx';
 import { BookSpine } from '../components/BookSpine/index.tsx';
+import type { Author, Item, ItemCreate, ItemCreateWithNewAuthor } from '../client/types.gen.ts';
 
 export const mockReviews = [
   {
@@ -25,7 +22,7 @@ export const mockReviews = [
     text: 'Это очень хорошая книга orem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! ',
   },
   {
-    author: 'даша',
+    author: 'leonid',
     text: 'Это очень хорошая книга orem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! ',
   },
   {
@@ -40,58 +37,57 @@ function BookShellPage() {
   const [backendError, setBackendError] = useState<string | undefined>();
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [showItemInfo, setShowItemInfo] = useState(false);
-  const [currentItem, setCurrentItem] = useState<any>();
+  const [currentItem, setCurrentItem] = useState<Item>();
 
-  const [items, setItems] = useState<any>([]);
-  const [authors, setAuthors] = useState<any>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [authors, setAuthors] = useState<Author[]>([]);
   const { theme } = useTheme();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const handleCreateBook = (data: { title: string; authorId: string }) => {
+  const handleCreateBook = async (data: { title: string; authorId: string }) => {
     console.log(data);
 
     const book = {
       ...data,
-      type: 'book',
+      type: 'book' as 'book' | 'film',
     };
+
+    const newBook = await postItems({ 
+      client: heyApiClient,
+      body: book 
+    });
+
+    if (newBook?.data) {
+      setItems((prev) => [...prev, newBook.data])
+    }
+
+
+    
 
     setIsCreateModalOpen(false);
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(book),
-    };
-    console.log(requestOptions);
-
-    // fetch('http://localhost:3000/items', requestOptions)
-    //   .then((response) => response.json())
-    //   .then((newBook) => setItems((old: any) => ([...old, newBook])))
-    //   .catch((error) => {
-    //     console.error('Error saving book:', error);
-    //     setBackendError(error.message);
-    //   });
   };
 
   useEffect(() => {
     const fetchItems = async () => {
       const result = await getItems({ client: heyApiClient });
-      console.log(result, 'res');
+      if (result && result.data) {
+        setItems(result.data);
+      }
 
-      setItems(result.data);
+    };
+
+    const fetchAuthors = async () => {
+      const result = await getAuthors({ client: heyApiClient });
+      if (result && result.data) {
+        setAuthors(result.data);
+      }
     };
 
     fetchItems();
+    fetchAuthors();
   }, []);
 
-  // useEffect(() => {
-  //   fetch('http://localhost:3000/items')
-  //     .then((response) => response.json())
-  //     .then((data) => setItems(data))
-  //     .catch((error) => {
-  //       console.error('Error fetching authors:', error);
-  //     });
-  // }, []);
 
   useEffect(() => {
     console.log(items, 'iiii');

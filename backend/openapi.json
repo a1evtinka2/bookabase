@@ -182,6 +182,87 @@
           }
         }
       }
+    },
+    "/items/with-new-author": {
+      "post": {
+        "tags": [
+          "Items"
+        ],
+        "summary": "Create an item with new author",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemCreateWithNewAuthor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item created with new author",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Item"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "tags": [
+          "Authors"
+        ],
+        "summary": "Retrieve a list of authors",
+        "responses": {
+          "200": {
+            "description": "A list of authors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Author"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Authors"
+        ],
+        "summary": "Create an author",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAuthor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Author"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -221,13 +302,21 @@
       },
       "Author": {
         "required": [
-          "firstName"
+          "firstName",
+          "id"
         ],
         "properties": {
           "firstName": {
             "type": "string"
           },
           "surname": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "normalizedName": {
             "type": "string"
           }
         }
@@ -265,6 +354,29 @@
           }
         }
       },
+      "ItemCreateWithNewAuthor": {
+        "required": [
+          "author",
+          "type",
+          "title"
+        ],
+        "properties": {
+          "author": {
+            "type": "object",
+            "$ref": "#/components/schemas/Author"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "book",
+              "film"
+            ]
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
       "ItemCreate": {
         "required": [
           "authorId",
@@ -284,6 +396,19 @@
             ]
           },
           "title": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateAuthor": {
+        "required": [
+          "firstName"
+        ],
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "surname": {
             "type": "string"
           }
         }

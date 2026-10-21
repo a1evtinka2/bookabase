@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import type { Item } from '../client';
 // import { BookSpine } from './components/BookSpine'
 // import type { Item } from './dto/item'
 
@@ -9,7 +10,7 @@ function AddNewBook() {
   const [backendError, setBackendError] = useState<string | undefined>(
     undefined,
   );
-  const [items, setItems] = useState<any>([]);
+  const [items, setItems] = useState<Item[]>([]);
 
   const onNewClick = () => {
     console.log('ne');
@@ -55,28 +56,8 @@ function AddNewBook() {
 
   return (
     <>
-      {/* <div className="flex items-end gap-2">
-        <BookSpine title="Мастер и Маргарита" />
-        <BookSpine title="Преступление и наказание" />
-        <BookSpine title="Сто лет одиночества" />
 
-    </div> */}
-      {/* {items?.map((i: Item) => {
-      const authorsFullName = `${i.author.firstName} ${i.author.surname}` 
-      return (
-        <BookSpine title={`${authorsFullName}.${i.title}`} />
-      )
-    })}
-        */}
-      {/* <BookSpine 
-      isNew 
-      title="Новая книга"
-      onNewClick={onNewClick}
-    /> */}
 
-      {/* {items?.map((i: any) => return {
-      <div>{i.title}</div>
-   })} */}
       <div className="ticks">
         {/* <section id="next-steps"> */}
         {/* <form > */}
