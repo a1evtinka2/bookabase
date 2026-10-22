@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/a1evtinka2/bookabase#readme",
   "dependencies": {
+    "amqplib": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "db-migrate-pg": "^1.5.2",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.99.0",
+    "@types/amqplib": "^0.10.8",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

@@ -20,13 +20,19 @@ export function CreateBookModal({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
     const formData = new FormData(e.currentTarget);
+    console.log(e, formData, isNew, 'e data');
 
-    onSubmit({
-      title: formData.get('title') as string,
-      authorId: formData.get('authorId') as string,
-    });
+    // if(isNew) {
+
+    // } else {
+    //   onSubmit({
+    //     title: formData.get('title') as string,
+    //     authorId: formData.get('authorId') as string,
+    //   });
+    // }
+
   };
 
   const checkIfNew = (e: React.SyntheticEvent<HTMLSelectElement, Event>) => {
